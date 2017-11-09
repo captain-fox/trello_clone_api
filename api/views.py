@@ -57,15 +57,15 @@ class CardDetails(APIView):
         serializer = CardSerializer(record)
         return Response(serializer.data)
 
-    # def put(self, request, pk, format=None):
-    #     record = self.get_record(pk)
-    #     serializer = CouponSerializer(record, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #
-    # def delete(self, request, pk, format=None):
-    #     record = self.get_record(pk)
-    #     record.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
+    def put(self, request, un, format=None):
+        record = self.get_record(un)
+        serializer = CardSerializer(record, data=request.query_params)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, un, format=None):
+        record = self.get_record(un)
+        record.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
