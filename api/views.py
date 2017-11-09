@@ -36,8 +36,8 @@ class Boards(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class BoardDetails(APIView):
 
+class BoardDetails(APIView):
     def get(self, request, id, format=None):
         records = Card.objects.filter(boardID=id)
         serializer = CardSerializer(records, many=True)
@@ -45,7 +45,6 @@ class BoardDetails(APIView):
 
 
 class CardDetails(APIView):
-
     def get_record(self, un):
         try:
             return Card.objects.get(uniqueNumber=un)
