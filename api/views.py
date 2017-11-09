@@ -38,7 +38,7 @@ class Tables(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BoardContents(APIView):
+class TableContents(APIView):
     def get(self, request, id, format=None):
         records = Card.objects.filter(boardID=id)
         serializer = CardSerializer(records, many=True)
