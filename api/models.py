@@ -4,6 +4,7 @@ import uuid
 
 class Board(models.Model):
     boardTitle = models.TextField(max_length=50, blank=False, unique=True)
+    boardDescription = models.TextField(max_length=500, blank=True)
 
 
 class Card(models.Model):
