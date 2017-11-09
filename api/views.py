@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import Http404
 from rest_framework.parsers import JSONParser
+
 from rest_framework.views import APIView
 from api.models import Card, Board
 from api.serializers import CardSerializer, BoardSerializer
@@ -37,7 +38,7 @@ class Boards(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BoardDetails(APIView):
+class BoardContents(APIView):
     def get(self, request, id, format=None):
         records = Card.objects.filter(boardID=id)
         serializer = CardSerializer(records, many=True)

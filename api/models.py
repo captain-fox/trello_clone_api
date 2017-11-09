@@ -8,11 +8,11 @@ class Board(models.Model):
 
 
 class Card(models.Model):
+    status = models.BooleanField(default=True)
     title = models.TextField(max_length=200, blank=False)
     description = models.TextField(max_length=1000, blank=True)
     uniqueNumber = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     boardID = models.ForeignKey(Board, on_delete=models.CASCADE)
-    activeStatus = models.BooleanField(default=True, blank=True)
 
 
 class Archive(models.Model):
