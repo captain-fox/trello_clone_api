@@ -6,8 +6,8 @@ from django.http import Http404
 from rest_framework.parsers import JSONParser
 
 from rest_framework.views import APIView
-from api.models import Card, Table
-from api.serializers import CardSerializer, TableSerializer
+from api.models import Card, Table, Board
+from api.serializers import CardSerializer, TableSerializer, BoardSerializer
 
 
 class Cards(APIView):
@@ -18,6 +18,20 @@ class Cards(APIView):
 
     def post(self, request, format=None):
         serializer = CardSerializer(data=request.query_params)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Boards(APIView):
+    def get(self, request, format=None):
+        data = Board.objects.all()
+        serializer = BoardSerializer(data, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = BoardSerializer(data=request.query_params)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -38,9 +52,16 @@ class Tables(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class BoardContents(APIView):
+    def get(self, request, id, format=None):
+        records = Table.objects.filter(boardID=id)
+        serializer = TableSerializer(records, many=True)
+        return Response(serializer.data)
+
+
 class TableContents(APIView):
     def get(self, request, id, format=None):
-        records = Card.objects.filter(boardID=id)
+        records = Card.objects.filter(tableID=id)
         serializer = CardSerializer(records, many=True)
         return Response(serializer.data)
 
