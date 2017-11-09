@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Card, Board
+from api.models import Card, Table
 
 
 class CardSerializer(serializers.ModelSerializer):
@@ -8,7 +8,7 @@ class CardSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BoardSerializer(serializers.ModelSerializer):
+class TableSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Board
+        model = Table
         fields = '__all__'
