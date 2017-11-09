@@ -10,6 +10,7 @@ class Board(models.Model):
 class Table(models.Model):
     tableTitle = models.TextField(max_length=50, blank=False, unique=True)
     tableDescription = models.TextField(max_length=500, blank=True)
+    boardID = models.ForeignKey(Board, on_delete=models.CASCADE)
 
 
 class Card(models.Model):
