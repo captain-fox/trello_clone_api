@@ -1,0 +1,6 @@
+.DS_Store
+.idea/
+*.pyc
+*.log
+local_settings.py
+__pycache__/
