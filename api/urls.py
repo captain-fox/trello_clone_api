@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^table/(?P<tableid>[0-9]+)/cards/$', views.TableContents.as_view()),
     url(r'^card/(?P<cardid>[0-9a-f-]+)$', views.CardDetails.as_view()),
     url(r'^cards/$', views.Cards.as_view()),
+    url(r'^archive/$', views.ArchiveCards.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

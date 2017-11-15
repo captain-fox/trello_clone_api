@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.http import Http404
+from django.http import Http404, QueryDict
 from rest_framework.parsers import JSONParser
 
 from rest_framework.views import APIView
@@ -24,10 +24,26 @@ class Cards(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ArchiveCards(APIView):
+    def get(self, request, format=None):
+        records = Card.objects.filter(archiveStatus=True)
+        serializer = CardSerializer(records, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        params = dict(request.query_params)
+        if params.get('carduuid', False):
+            record = Card.objects.filter(uniqueNumber=params.get('carduuid')[0])[0]
+            record.archiveStatus = True
+            record.save()
+            print(record.archiveStatus)
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 class Boards(APIView):
     def get(self, request, format=None):
-        params = dict(request.query_params)
-        print(params.get('provider', False), params.get('uuid', False))
         data = Board.objects.all()
         serializer = BoardSerializer(data, many=True)
         return Response(serializer.data)
@@ -63,7 +79,7 @@ class BoardTables(APIView):
 
 class TableContents(APIView):
     def get(self, request, tableid, format=None):
-        records = Card.objects.filter(tableID=tableid)
+        records = Card.objects.filter(tableID=tableid, archiveStatus=False)
         serializer = CardSerializer(records, many=True)
         return Response(serializer.data)
 
