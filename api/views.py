@@ -26,6 +26,8 @@ class Cards(APIView):
 
 class Boards(APIView):
     def get(self, request, format=None):
+        params = dict(request.query_params)
+        print(params.get('provider', False), params.get('uuid', False))
         data = Board.objects.all()
         serializer = BoardSerializer(data, many=True)
         return Response(serializer.data)
@@ -52,7 +54,7 @@ class Tables(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BoardContents(APIView):
+class BoardTables(APIView):
     def get(self, request, id, format=None):
         records = Table.objects.filter(boardID=id)
         serializer = TableSerializer(records, many=True)
@@ -60,33 +62,33 @@ class BoardContents(APIView):
 
 
 class TableContents(APIView):
-    def get(self, request, id, format=None):
-        records = Card.objects.filter(tableID=id)
+    def get(self, request, tableid, format=None):
+        records = Card.objects.filter(tableID=tableid)
         serializer = CardSerializer(records, many=True)
         return Response(serializer.data)
 
 
 class CardDetails(APIView):
-    def get_record(self, un):
+    def get_record(self, cardid):
         try:
-            return Card.objects.get(uniqueNumber=un)
+            return Card.objects.get(uniqueNumber=cardid)
         except Card.DoesNotExist:
             raise Http404
 
-    def get(self, request, un, format=None):
-        record = self.get_record(un)
+    def get(self, request, cardid, format=None):
+        record = self.get_record(cardid)
         serializer = CardSerializer(record)
         return Response(serializer.data)
 
-    def put(self, request, un, format=None):
-        record = self.get_record(un)
+    def put(self, request, cardid, format=None):
+        record = self.get_record(cardid)
         serializer = CardSerializer(record, data=request.query_params)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, un, format=None):
-        record = self.get_record(un)
+    def delete(self, request, cardid, format=None):
+        record = self.get_record(cardid)
         record.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
