@@ -14,7 +14,7 @@ class Table(models.Model):
 
 
 class Card(models.Model):
-    archiveStatus = models.BooleanField(default=True)
+    archiveStatus = models.BooleanField(default=False)
     title = models.TextField(max_length=200, blank=False)
     description = models.TextField(max_length=1000, blank=True)
     uniqueNumber = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
