@@ -18,6 +18,7 @@ class Card(models.Model):
     title = models.TextField(max_length=200, blank=False)
     description = models.TextField(max_length=1000, blank=True)
     uniqueNumber = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    owner = models.ForeignKey('auth.User', related_name='cards', on_delete=models.CASCADE)
     tableID = models.ForeignKey(Table, on_delete=models.CASCADE)
 
 
