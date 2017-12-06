@@ -1,19 +1,16 @@
-from django.shortcuts import render
-from rest_framework import status, generics
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from django.http import Http404, QueryDict
-from django.contrib.auth.models import User
 from rest_framework.parsers import JSONParser
 from rest_framework import permissions
-
+from rest_framework import status, generics
+from rest_framework.response import Response
 from rest_framework.views import APIView
-from api.models import Card, Table, Board
-from api.serializers import CardSerializer, TableSerializer, BoardSerializer, UserSerializer
+
+from api.serializers import *
 
 
 class Cards(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    parser_classes = (JSONParser,)
 
     def get(self, request, format=None):
         data = Card.objects.all()
@@ -22,7 +19,8 @@ class Cards(APIView):
 
     def post(self, request, format=None):
         print(request.query_params)
-        serializer = CardSerializer(data=request.query_params)
+        serializer = CardSerializer(data=request.data)
+        # serializer = CardSerializer(data=request.query_params)
         if serializer.is_valid():
             serializer.save(owner=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -31,6 +29,7 @@ class Cards(APIView):
 
 class CardDetails(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    parser_classes = (JSONParser,)
 
     def get_record(self, cardid):
         try:
@@ -45,7 +44,7 @@ class CardDetails(APIView):
 
     def put(self, request, cardid, format=None):
         record = self.get_record(cardid)
-        serializer = CardSerializer(record, data=request.query_params)
+        serializer = CardSerializer(record, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -59,6 +58,7 @@ class CardDetails(APIView):
 
 class ArchiveCards(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    parser_classes = (JSONParser,)
 
     def get(self, request, format=None):
         records = Card.objects.filter(archiveStatus=True)
@@ -78,13 +78,16 @@ class ArchiveCards(APIView):
 
 
 class Boards(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    parser_classes = (JSONParser,)
+
     def get(self, request, format=None):
         data = Board.objects.all()
         serializer = BoardSerializer(data, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = BoardSerializer(data=request.query_params)
+        serializer = BoardSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -92,13 +95,31 @@ class Boards(APIView):
 
 
 class Tables(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    parser_classes = (JSONParser,)
+
+    def get_record(self, table_id):
+        try:
+            return Table.objects.get(id=table_id)
+        except Table.DoesNotExist:
+            raise Http404
+
     def get(self, request, format=None):
         data = Table.objects.all()
         serializer = TableSerializer(data, many=True)
         return Response(serializer.data)
 
+    def put(self, request, format=None):
+
+        record = self.get_record(request.data['id'])
+        serializer = TableSerializer(record, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def post(self, request, format=None):
-        serializer = TableSerializer(data=request.query_params)
+        serializer = TableSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -106,6 +127,8 @@ class Tables(APIView):
 
 
 class BoardTables(APIView):
+    parser_classes = (JSONParser,)
+
     def get(self, request, id, format=None):
         records = Table.objects.filter(boardID=id)
         serializer = TableSerializer(records, many=True)
@@ -113,6 +136,8 @@ class BoardTables(APIView):
 
 
 class TableContents(APIView):
+    parser_classes = (JSONParser,)
+
     def get(self, request, tableid, format=None):
         records = Card.objects.filter(tableID=tableid, archiveStatus=False)
         serializer = CardSerializer(records, many=True)
