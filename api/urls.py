@@ -3,7 +3,7 @@ from api import views
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
-    # get list of all boards (projects) / add new board / edit existing boards
+    # get list of all boards (projects) / add new board
     url(r'^boards/$', views.Boards.as_view()),
     # get list of tables from board with ID ...
     url(r'^board/(?P<id>[0-9]+)/tables/$', views.BoardTables.as_view()),
@@ -11,9 +11,9 @@ urlpatterns = [
     url(r'^tables/$', views.Tables.as_view()),
     # get list of cards form table with ID ...
     url(r'^table/(?P<tableid>[0-9]+)/cards/$', views.TableContents.as_view()),
-    # get list of all cards / add new card / edit existing cards
+    # get list of all cards / add new card / edit existing cards / delete card
     url(r'^cards/$', views.Cards.as_view()),
-    # operate on an instance of specific card / put, delete, etc...
+    # get an instance of specific card
     url(r'^card/(?P<cardid>[0-9a-f-]+)$', views.CardDetails.as_view()),
     # get list of archived cards / put a card to archive
     # url(r'^archive/$', views.ArchiveCards.as_view()),
