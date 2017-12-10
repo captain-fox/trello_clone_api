@@ -95,6 +95,12 @@ class Boards(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
+    def get_record(self, boardId):
+        try:
+            return Board.objects.get(id=boardId)
+        except Board.DoesNotExist:
+            raise Http404
+
     def get(self, request, format=None):
         data = Board.objects.all()
         serializer = BoardSerializer(data, many=True)
@@ -107,6 +113,18 @@ class Boards(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request, format=None):
+        try:
+            boardId = request.data['id']
+        except KeyError:
+            return Response({'missing field': 'id'}, status=status.HTTP_400_BAD_REQUEST)
+
+        record = self.get_record(boardId)
+        serializer = BoardSerializer(record, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Tables(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
