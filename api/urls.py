@@ -5,6 +5,9 @@ from rest_framework.authtoken import views as rf_views
 
 urlpatterns = [
 
+    # http POST 127.0.0.1:8000/authorise/ username='stan' password='apipassword'
+    # http GET 127.0.0.1:8000/***/ 'Authorization: Token your_token_value'
+
     # Obtain auth token
     url(r'^authorise/', rf_views.obtain_auth_token),
     # get list of all boards (projects) / add new board

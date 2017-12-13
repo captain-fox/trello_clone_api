@@ -105,6 +105,7 @@ class Boards(APIView):
 
     def get(self, request, format=None):
         data = Board.objects.all()
+        # data = Board.objects.filter(tableID=tableid, archiveStatus=False)
         serializer = BoardSerializer(data, many=True)
         return Response(serializer.data)
 
