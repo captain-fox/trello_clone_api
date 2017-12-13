@@ -1,8 +1,12 @@
 from django.conf.urls import url
 from api import views
 from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework.authtoken import views as rf_views
 
 urlpatterns = [
+
+    # Obtain auth token
+    url(r'^authorise/', rf_views.obtain_auth_token),
     # get list of all boards (projects) / add new board
     url(r'^boards/$', views.Boards.as_view()),
     # get list of tables from board with ID ...

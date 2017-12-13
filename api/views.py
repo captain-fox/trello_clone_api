@@ -9,7 +9,7 @@ from api.serializers import *
 
 
 class Cards(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, unique_number):
@@ -57,7 +57,7 @@ class Cards(APIView):
 
 
 class CardDetails(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, cardid):
@@ -94,7 +94,7 @@ class CardDetails(APIView):
 
 
 class Boards(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, boardId):
@@ -130,7 +130,7 @@ class Boards(APIView):
 
 
 class Tables(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, table_id):
@@ -184,14 +184,14 @@ class TableContents(APIView):
 
 
 class UserList(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
