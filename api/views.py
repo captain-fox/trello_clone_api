@@ -1,4 +1,5 @@
 from django.http import Http404, QueryDict
+from django.db.models import Q
 from rest_framework import permissions, status, generics
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
@@ -104,8 +105,7 @@ class Boards(APIView):
             raise Http404
 
     def get(self, request, format=None):
-        data = Board.objects.all()
-        # data = Board.objects.filter(tableID=tableid, archiveStatus=False)
+        data = Board.objects.filter(Q(owner=self.request.user) | Q(private_access=False))
         serializer = BoardSerializer(data, many=True)
         return Response(serializer.data)
 

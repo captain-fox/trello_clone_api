@@ -8,7 +8,7 @@ class CardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Card
-        fields = ('archiveStatus', 'title', 'description', 'owner', 'tableID', 'uniqueNumber')
+        fields = ('uniqueNumber', 'archiveStatus', 'title', 'description', 'owner', 'tableID')
 
 
 class TableSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class TableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Table
-        fields = ('tableTitle', 'tableDescription', 'boardID', 'owner')
+        fields = ('id', 'tableTitle', 'tableDescription', 'boardID', 'owner')
 
 
 class BoardSerializer(serializers.ModelSerializer):
@@ -24,10 +24,12 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ('boardTitle', 'boardDescription', 'owner')
+        fields = ('id', 'boardTitle', 'private_access', 'boardDescription', 'owner')
 
 
 class UserSerializer(serializers.ModelSerializer):
+    boards = serializers.PrimaryKeyRelatedField(many=True, queryset=Board.objects.all())
+    tables = serializers.PrimaryKeyRelatedField(many=True, queryset=Table.objects.all())
     cards = serializers.PrimaryKeyRelatedField(many=True, queryset=Card.objects.all())
 
     class Meta:
