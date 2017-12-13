@@ -3,6 +3,7 @@ from rest_framework import permissions, status, generics
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
 from api.serializers import *
 
@@ -23,6 +24,7 @@ class Cards(APIView):
         return Response(serializer.data)
 
     def put(self, request, format=None):
+        # print(request.user, request.password)
         try:
             unique_number = request.data['uniqueNumber']
         except KeyError:
@@ -85,7 +87,7 @@ class CardDetails(APIView):
 #             record = Card.objects.filter(uniqueNumber=params.get('carduuid')[0])[0]
 #             record.archiveStatus = True
 #             record.save()
-#             print(record.archiveStatus)
+#             print(record.title, record.archiveStatus)
 #             return Response(status=status.HTTP_201_CREATED)
 #         else:
 #             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -125,6 +127,7 @@ class Boards(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class Tables(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -181,10 +184,14 @@ class TableContents(APIView):
 
 
 class UserList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
