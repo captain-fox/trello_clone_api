@@ -16,12 +16,14 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class Board(models.Model):
     boardTitle = models.TextField(max_length=50, blank=False, unique=True)
     boardDescription = models.TextField(max_length=500, blank=True)
+    owner = models.ForeignKey('auth.User', related_name='boards', on_delete=models.CASCADE)
 
 
 class Table(models.Model):
     tableTitle = models.TextField(max_length=50, blank=False, unique=True)
     tableDescription = models.TextField(max_length=500, blank=True)
     boardID = models.ForeignKey(Board, on_delete=models.CASCADE)
+    owner = models.ForeignKey('auth.User', related_name='tables', on_delete=models.CASCADE)
 
 
 class Card(models.Model):
