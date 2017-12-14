@@ -81,7 +81,7 @@ class Boards(APIView):
             raise Http404
 
     def get(self, request, format=None):
-        data = Board.objects.filter(Q(owner=self.request.user) | Q(private_access=False))
+        data = Board.objects.filter(Q(owner=self.request.user) | Q(public_access=False))
         serializer = BoardSerializer(data, many=True)
         return Response(serializer.data)
 

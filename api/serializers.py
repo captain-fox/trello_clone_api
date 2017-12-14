@@ -23,7 +23,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ('id', 'boardTitle', 'private_access', 'boardDescription', 'owner')
+        fields = ('id', 'boardTitle', 'public_access', 'boardDescription', 'owner')
 
 
 class UserSerializer(serializers.ModelSerializer):

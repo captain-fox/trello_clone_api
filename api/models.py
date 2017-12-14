@@ -16,7 +16,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class Board(models.Model):
     boardTitle = models.TextField(max_length=50, blank=False, unique=True)
     boardDescription = models.TextField(max_length=500, blank=True)
-    private_access = models.BooleanField(default=True)
+    public_access = models.BooleanField(default=False)
     owner = models.ForeignKey('auth.User', related_name='boards', on_delete=models.CASCADE)
 
 
