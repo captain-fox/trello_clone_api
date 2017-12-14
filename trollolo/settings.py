@@ -38,6 +38,9 @@ ALLOWED_HOSTS = [
 # robert
 # apipassword
 
+# admin
+# adminapipass
+
 
 # Application definition
 
