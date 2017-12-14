@@ -10,7 +10,6 @@ from api.serializers import *
 
 
 class Cards(APIView):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, unique_number):
@@ -58,7 +57,6 @@ class Cards(APIView):
 
 
 class CardDetails(APIView):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, cardid):
@@ -73,29 +71,7 @@ class CardDetails(APIView):
         return Response(serializer.data)
 
 
-# class ArchiveCards(APIView):
-#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-#     parser_classes = (JSONParser,)
-#
-#     def get(self, request, format=None):
-#         records = Card.objects.filter(archiveStatus=True)
-#         serializer = CardSerializer(records, many=True)
-#         return Response(serializer.data)
-#
-#     def post(self, request, format=None):
-#         params = dict(request.query_params)
-#         if params.get('carduuid', False):
-#             record = Card.objects.filter(uniqueNumber=params.get('carduuid')[0])[0]
-#             record.archiveStatus = True
-#             record.save()
-#             print(record.title, record.archiveStatus)
-#             return Response(status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
 class Boards(APIView):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, boardId):
@@ -131,7 +107,6 @@ class Boards(APIView):
 
 
 class Tables(APIView):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     parser_classes = (JSONParser,)
 
     def get_record(self, table_id):
@@ -161,7 +136,7 @@ class Tables(APIView):
     def post(self, request, format=None):
         serializer = TableSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner=self.request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -175,6 +150,28 @@ class BoardTables(APIView):
         return Response(serializer.data)
 
 
+class ArchiveCards(APIView):
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    parser_classes = (JSONParser,)
+
+    def get(self, request, format=None):
+        records = Card.objects.filter(archiveStatus=True)
+        serializer = CardSerializer(records, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, cardid, format=None):
+        # params = dict(request.query_params)
+        try:
+            record = Card.objects.get(uniqueNumber=cardid)
+            # print(record.title, record.archiveStatus)
+            record.archiveStatus = True
+            record.save()
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            # print(e)
+            return Response({'Exception': e}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class TableContents(APIView):
     parser_classes = (JSONParser,)
 
@@ -185,14 +182,12 @@ class TableContents(APIView):
 
 
 class UserList(generics.ListAPIView):
-    # permission_classes = (permissions.IsAuthenticated,)
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):
-    # permission_classes = (permissions.IsAuthenticated,)
 
     queryset = User.objects.all()
     serializer_class = UserSerializer

@@ -23,7 +23,7 @@ urlpatterns = [
     # get an instance of specific card
     url(r'^card/(?P<cardid>[0-9a-f-]+)$', views.CardDetails.as_view()),
     # get list of archived cards / put a card to archive
-    # url(r'^archive/$', views.ArchiveCards.as_view()),
+    url(r'^archive/(?P<cardid>[0-9a-f-]+)$', views.ArchiveCards.as_view()),
     # get list of all users and their credentials, cards, etc...
     url(r'^users/$', views.UserList.as_view()),
     # get specific user and his credentials, cards, etc...

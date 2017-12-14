@@ -24,13 +24,13 @@ class Table(models.Model):
     tableTitle = models.TextField(max_length=50, blank=False, unique=True)
     tableDescription = models.TextField(max_length=500, blank=True)
     boardID = models.ForeignKey(Board, on_delete=models.CASCADE)
-    owner = models.ForeignKey('auth.User', related_name='tables', on_delete=models.CASCADE)
 
 
 class Card(models.Model):
     archiveStatus = models.BooleanField(default=False)
     title = models.TextField(max_length=200, blank=False)
     description = models.TextField(max_length=1000, blank=True)
+    color = models.CharField(max_length=10, default='#fff9ac')
     uniqueNumber = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     owner = models.ForeignKey('auth.User', related_name='cards', on_delete=models.CASCADE)
     tableID = models.ForeignKey(Table, on_delete=models.CASCADE)
