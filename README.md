@@ -1,4 +1,4 @@
-## To start server with project at localhost after cloning project make sure you have installed locally:
+## To start server at localhost after cloning project make sure you have installed locally:
 * python 3.6 ("https://www.python.org/downloads/")
 * pip
 
@@ -11,3 +11,7 @@
 
 ## Or checkout working image from dockerhub:
 ###### docker run -p 8000:8000 redoute/trollolo
+
+## Superuser credentials
+###### username: admin
+###### password: adminapipass
