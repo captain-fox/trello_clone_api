@@ -30,17 +30,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
-# superusers
-
-# stan
-# apipassword
-
-# robert
-# apipassword
-
-# admin
-# adminapipass
-
 
 # Application definition
 

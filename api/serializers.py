@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from api.models import Board, Card, Table
+from api.models import Board, Card, Table, Comment
 
 
 class CardSerializer(serializers.ModelSerializer):
@@ -24,6 +24,14 @@ class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = ('id', 'boardTitle', 'public_access', 'boardDescription', 'owner')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    reference_card = serializers.ReadOnlyField(source='reference_card.uniqueNumber')
+
+    class Meta:
+        model = Comment
+        fields = ('reference_card', 'comment')
 
 
 class UserSerializer(serializers.ModelSerializer):

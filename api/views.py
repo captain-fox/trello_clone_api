@@ -56,6 +56,51 @@ class Cards(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class Comments(APIView):
+    def get_record(self, unique_number):
+        try:
+            return Card.objects.get(uniqueNumber=unique_number)
+        except Card.DoesNotExist:
+            raise Http404
+
+    def get(self, request, format=None):
+        data = Card.objects.all()
+        serializer = CardSerializer(data, many=True)
+        return Response(serializer.data)
+
+    def put(self, request, format=None):
+        # print(request.user, request.password)
+        try:
+            unique_number = request.data['uniqueNumber']
+        except KeyError:
+            return Response({'missing field': 'uniqueNumber'}, status=status.HTTP_400_BAD_REQUEST)
+
+        record = self.get_record(unique_number)
+        serializer = CardSerializer(record, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, format=None):
+        serializer = CardSerializer(data=request.data)
+        # serializer = CardSerializer(data=request.query_params)
+        if serializer.is_valid():
+            serializer.save(owner=self.request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, format=None):
+        try:
+            unique_number = request.data['uniqueNumber']
+        except KeyError:
+            return Response({'missing field': 'uniqueNumber'}, status=status.HTTP_400_BAD_REQUEST)
+
+        record = self.get_record(unique_number)
+        record.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class CardDetails(APIView):
     parser_classes = (JSONParser,)
 
@@ -139,6 +184,16 @@ class Tables(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, format=None):
+        try:
+            id = request.data['id']
+        except KeyError:
+            return Response({'missing field': 'id'}, status=status.HTTP_400_BAD_REQUEST)
+
+        record = self.get_record(id)
+        record.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class BoardTables(APIView):

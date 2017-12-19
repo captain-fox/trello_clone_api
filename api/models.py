@@ -36,5 +36,7 @@ class Card(models.Model):
     tableID = models.ForeignKey(Table, on_delete=models.CASCADE)
 
 
-
+class Comment(models.Model):
+    comment = models.TextField(max_length=200, blank=False)
+    reference_card = models.ForeignKey(Card, on_delete=models.CASCADE)
 
