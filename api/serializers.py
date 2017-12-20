@@ -27,11 +27,11 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    reference_card = serializers.ReadOnlyField(source='reference_card.uniqueNumber')
+    # reference_card = serializers.ReadOnlyField(source='reference_card.uniqueNumber')
 
     class Meta:
         model = Comment
-        fields = ('reference_card', 'comment')
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):

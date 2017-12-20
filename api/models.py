@@ -37,6 +37,6 @@ class Card(models.Model):
 
 
 class Comment(models.Model):
-    comment = models.TextField(max_length=200, blank=False)
+    comment = models.TextField(max_length=400, blank=False)
     reference_card = models.ForeignKey(Card, on_delete=models.CASCADE)
 
