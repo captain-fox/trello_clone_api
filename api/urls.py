@@ -5,6 +5,15 @@ from rest_framework.authtoken import views as rf_views
 
 urlpatterns = [
 
+    # new user sign up
+    # {
+    #     "username": "username",
+    #     "email": "user@web.com",
+    #     "password": "userpass123"
+    # }
+
+    url(r'^register/', views.UserSignUp.as_view()),
+
     # superusers:
 
     # admin
@@ -23,6 +32,7 @@ urlpatterns = [
 
     # Obtain auth token
     url(r'^authorise/', rf_views.obtain_auth_token),
+
     # get list of all boards (projects) / add new board / edit existing board
     url(r'^boards/$', views.Boards.as_view()),
 
@@ -58,6 +68,8 @@ urlpatterns = [
 
     # get specific user and his credentials, cards, etc...
     url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
+
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

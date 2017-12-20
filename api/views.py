@@ -220,7 +220,7 @@ class BoardTables(APIView):
 
 
 class ArchiveCards(APIView):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticated,)
     parser_classes = (JSONParser,)
 
     def get(self, request, format=None):
@@ -260,3 +260,18 @@ class UserDetail(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UserSignUp(APIView):
+
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (JSONParser,)
+
+    def post(self, request):
+        print(request.data)
+        print(request.data['username'], request.data['email'], request.data['password'])
+        try:
+            User.objects.create_user(request.data['username'], request.data['email'], request.data['password'])
+        except Exception as e:
+            return Response({'Exception caught': e}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
