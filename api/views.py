@@ -268,10 +268,9 @@ class UserSignUp(APIView):
     parser_classes = (JSONParser,)
 
     def post(self, request):
-        print(request.data)
-        print(request.data['username'], request.data['email'], request.data['password'])
+        # print(request.data['username'], request.data['email'], request.data['password'])
         try:
             User.objects.create_user(request.data['username'], request.data['email'], request.data['password'])
         except Exception as e:
-            return Response({'Exception caught': e}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
+            return Response({'Server exception': str(e.__cause__)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_201_CREATED)
